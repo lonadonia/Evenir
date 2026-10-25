@@ -107,8 +107,10 @@ for (const p of paths) {
     await page.goto(base + p, { waitUntil: "networkidle" });
     // Prime lazy content / reveals
     await page.evaluate(async () => {
+      document.documentElement.style.scrollBehavior = "auto"; // instant, so the page is really back at the top
       for (let y = 0; y < document.body.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 120)); }
       window.scrollTo(0, 0);
+      await new Promise((r) => setTimeout(r, 200));
     });
     await page.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth > 0), null, { timeout: 15000 }).catch(() => {});
     await page.waitForTimeout(600);

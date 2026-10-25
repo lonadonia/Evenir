@@ -18,6 +18,7 @@
   --color-teal-deep: #0c4a4f;   /* dark brand surface (featured card, contact band) */
   --color-teal-night: #062e31;  /* footer / deepest surface */
   --color-teal-glow: #5cc6cd;   /* two-tone emphasis on dark teal surfaces */
+  --color-abyss: #031d1f;       /* hero base — deepest brand surface */
   --color-mist-50: #f3f9fa;     /* page tint */
   --color-mist-100: #e7f2f3;    /* hover tint, subtle panels */
   --color-ink: #1b2324;         /* headings & strong text (16:1 on white) */
@@ -26,6 +27,7 @@
   --color-paper: #ffffff;
   --color-orange-soft: #ff9a66; /* hover state of orange fill (raises ink contrast) */
   --color-orange-tint: #fff1ea; /* AI marker background */
+  --color-orange-ink: #a84a1a;  /* orange text/icons on orange-tint (5.2:1) */
   --color-danger: #b42318;      /* form errors (6.5:1 on white) */
   --color-danger-tint: #fdf0ee;
 
@@ -67,6 +69,8 @@
 
   --shadow-card: 0 1px 2px rgb(6 46 49 / 0.06), 0 8px 24px -12px rgb(6 46 49 / 0.18);
   --shadow-pop: 0 2px 4px rgb(6 46 49 / 0.08), 0 24px 48px -16px rgb(6 46 49 / 0.28);
+  --shadow-lift: 0 2px 6px rgb(6 46 49 / 0.06), 0 30px 60px -24px rgb(6 46 49 / 0.35);
+  --shadow-glow: 0 0 0 1px rgb(92 198 205 / 0.18), 0 30px 80px -20px rgb(25 146 155 / 0.45);
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --animate-signal: signal 2.4s var(--ease-out) infinite;
@@ -75,6 +79,37 @@
     0% { transform: scale(0.6); opacity: 0.9; }
     100% { transform: scale(2.4); opacity: 0; }
   }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.45); }
+  50% { transform: scaleY(1); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes travel {
+  0% { left: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+.process-pulse { animation: travel 4.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .process-pulse { animation: none; left: 50%; }
 }
 
 @layer base {
@@ -169,6 +204,73 @@
 
   .tabular { font-variant-numeric: tabular-nums; }
 
+  /* ── Premium surfaces ── */
+  .surface-abyss {
+    background-color: var(--color-abyss);
+    background-image:
+      radial-gradient(60rem 40rem at 85% -10%, rgb(25 146 155 / 0.42), transparent 60%),
+      radial-gradient(40rem 30rem at 0% 110%, rgb(255 130 67 / 0.13), transparent 60%),
+      linear-gradient(180deg, #031d1f 0%, #062e31 100%);
+  }
+  .surface-deep {
+    background-color: var(--color-teal-deep);
+    background-image:
+      radial-gradient(50rem 30rem at 100% 0%, rgb(92 198 205 / 0.22), transparent 60%),
+      radial-gradient(30rem 24rem at 0% 100%, rgb(255 130 67 / 0.12), transparent 60%);
+  }
+  .grid-lines {
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 60% at 60% 30%, #000 30%, transparent 75%);
+  }
+  .grid-lines-light {
+    background-image:
+      linear-gradient(rgb(25 146 155 / 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(25 146 155 / 0.07) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, #000 20%, transparent 75%);
+  }
+  .glass {
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03));
+    border: 1px solid rgb(255 255 255 / 0.12);
+    backdrop-filter: blur(14px);
+  }
+  .card-sheen {
+    background: linear-gradient(180deg, #ffffff 0%, #f6fbfb 100%);
+  }
+  /* Pointer-follow highlight on interactive tiles (set by <Spotlight/>) */
+  [data-spotlight] { position: relative; isolation: isolate; }
+  [data-spotlight]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 300ms;
+    background: radial-gradient(28rem circle at var(--mx, 50%) var(--my, 50%), var(--spot, rgb(25 146 155 / 0.12)), transparent 45%);
+  }
+  [data-spotlight]:hover::before { opacity: 1; }
+
+  /* Hero entrance only. Sections below the fold are never hidden: no scroll-linked
+     reveal, so screenshots, print and HTML-to-Figma import always see the full page.
+     `.reveal` is kept as a hook for a future, opt-in effect. */
+  .enter { animation: rise 0.9s var(--ease-out) both; }
+  .enter-1 { animation-delay: 60ms; }
+  .enter-2 { animation-delay: 160ms; }
+  .enter-3 { animation-delay: 260ms; }
+  .enter-4 { animation-delay: 380ms; }
+
+  .marquee-track { animation: marquee 40s linear infinite; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .float-slow { animation: float 6s ease-in-out infinite; }
+  .float-slower { animation: float 8s ease-in-out 1.2s infinite; }
+  .wave-bar { transform-origin: center; animation: wave 1.4s ease-in-out infinite; }
+  .blink { animation: blink 1.6s ease-in-out infinite; }
+
   /* Hatched placeholder surface for client-supplied imagery */
   .placeholder-hatch {
     background-color: var(--color-mist-50);
@@ -201,4 +303,5 @@ html[data-notes="on"] .slot-label { display: inline-flex; }
 @media (prefers-reduced-motion: reduce) {
   .pulse, .pulse-ring { display: none; }
   .pulse-static { display: inline; }
+  .marquee-track, .float-slow, .float-slower, .wave-bar, .blink, .enter, .reveal { animation: none !important; }
 }

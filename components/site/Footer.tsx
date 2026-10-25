@@ -12,7 +12,15 @@ export function Footer({ locale }: { locale: Locale }) {
   const ext = <span className="sr-only"> ({t.nav.external})</span>;
 
   return (
-    <footer className="on-dark bg-teal-night text-mist">
+    <footer className="on-dark relative isolate overflow-hidden border-t border-white/10 bg-abyss text-mist">
+      {/* watermark: the original white logo, unchanged, very low opacity */}
+      <img
+        src="/brand/evenir-logo-white.svg"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-[6%] -bottom-[4%] -z-10 w-[70%] max-w-[64rem] opacity-[0.035] select-none"
+      />
+      <div aria-hidden="true" className="absolute -top-40 left-1/3 -z-10 size-[40rem] rounded-full bg-[radial-gradient(closest-side,rgb(25_146_155/0.18),transparent)]" />
       <div className="container-page grid gap-12 pt-16 pb-10 md:grid-cols-12 md:gap-8 lg:pt-20">
         <div className="md:col-span-12 lg:col-span-4">
           <Logo href={r.home} variant="white" className="h-7" label={locale === "cs" ? "Evenir — hlavní stránka" : "Evenir — homepage"} />

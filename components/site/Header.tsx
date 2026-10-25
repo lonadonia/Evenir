@@ -1,10 +1,9 @@
 import { copy, contact } from "@/content/site";
 import { aiGroup, serviceGroups } from "@/content/services";
 import { live, routes, type Locale } from "@/lib/i18n";
-import { Logo } from "./Logo";
 import { SiteNav, type NavData } from "./SiteNav";
 
-export function Header({ locale, alternateHref }: { locale: Locale; alternateHref: string }) {
+export function Header({ locale, alternateHref, overlay = false }: { locale: Locale; alternateHref: string; overlay?: boolean }) {
   const t = copy[locale];
   const r = routes[locale];
   const [featured, ...products] = aiGroup.services;
@@ -60,7 +59,7 @@ export function Header({ locale, alternateHref }: { locale: Locale; alternateHre
       >
         {t.skip}
       </a>
-      <SiteNav data={data} logo={<Logo href={r.home} className="h-[1.6rem] lg:h-[1.85rem]" label={locale === "cs" ? "Evenir — hlavní stránka" : "Evenir — homepage"} />} />
+      <SiteNav data={data} overlay={overlay} logoLabel={locale === "cs" ? "Evenir — hlavní stránka" : "Evenir — homepage"} />
     </>
   );
 }

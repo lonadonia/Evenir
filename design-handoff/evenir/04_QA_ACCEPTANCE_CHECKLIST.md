@@ -1,6 +1,6 @@
 # 04 · QA & acceptance checklist — Evenir
 
-Evidence was produced on 2026-10-25 against the production build (`next build` + `next start`).
+Evidence was produced on 2026-10-25 against the production build (`next build` + `next start`), and re-run in full after the v2 visual upgrade (dark lit surfaces, bento portfolio, new sections). The results below are the v2 run.
 
 ## Commands
 
@@ -13,7 +13,24 @@ Evidence was produced on 2026-10-25 against the production build (`next build` +
 | Interactions | `node scripts/qa-interactions.mjs http://localhost:3001` | **27/27 pass** |
 | 404 | `curl /neexistuje` | HTTP 404 with designed page |
 
-Screens: `design-handoff/evenir/screens/` (full pages at 1440 and 390, plus menu, drawer, form and catalogue states).
+Screens: `design-handoff/evenir/screens/` (v2 full pages at 1440 and 390, hero crop, plus menu, drawer, form and catalogue states).
+
+### v2 contrast additions (computed)
+
+| Pair | Ratio |
+|---|---|
+| Mist 85% / Abyss (hero lead, card text) | 10.24:1 |
+| Mist 70% / Abyss (small labels) | 7.34:1 |
+| Teal glow / Teal deep | 4.94:1 |
+| Orange ink / Orange tint (badges) | 5.20:1 |
+| White / AI core gradient mid `#0F5F65` | 7.38:1 |
+
+### v2 findings fixed during QA
+
+- Scroll-linked reveal left the case-study block at zero opacity in full-page captures → removed; sections are never hidden.
+- A floating hero badge covered the “Hovory” chip → moved onto the empty part of the console's title bar.
+- QA script captured the header mid smooth-scroll (looked opaque) → script now scrolls instantly; header verified transparent at top on all three dark-hero pages.
+- About photo sometimes captured as its blur placeholder → loads eagerly.
 
 ## Brief §13 acceptance checklist
 
@@ -40,7 +57,7 @@ Screens: `design-handoff/evenir/screens/` (full pages at 1440 and 390, plus menu
 - Forms: visible labels, required markers with screen-reader text, inline errors linked via `aria-describedby`, focused error summary with links.
 - Motion: only the schematic pulses; hidden under `prefers-reduced-motion` (static nodes shown instead).
 
-## Design critique (after two loops)
+## Design critique (v2, after two further loops)
 
 | Area | Score /5 | Main fix made |
 |---|---|---|
@@ -48,14 +65,14 @@ Screens: `design-handoff/evenir/screens/` (full pages at 1440 and 390, plus menu
 | Hierarchy (squint test) | 4.5 | Hero recomposed: wide statement headline, larger schematic |
 | Typography | 4.5 | — |
 | Colour | 4.5 | Input border contrast fixed |
-| Composition & rhythm | 4 | Varied section surfaces (white / mist / deep teal) |
-| Distinctiveness | 4 | Signal schematic + two-tone + expanded type |
+| Composition & rhythm | 4.5 | Dark–light alternation, bento grid, overlapping covers and badges |
+| Distinctiveness | 4.5 | Glowing signal schematic in a console, product mini-interfaces |
 | Signature move | 4.5 | Reused in product cards and case-study template |
 | Copy | 4 | Draft — needs client approval |
 | Responsiveness | 4.5 | 1024 hero fixed; drawer containing-block bug fixed |
 | Accessibility | 4.5 | — |
 | Motion restraint | 5 | — |
-| Polish | 4 | Logo optical sizing, designed 404, OG images, duplicate footer text removed |
+| Polish | 4.5 | Lift shadows, pointer highlight, logo marquee, footer watermark, new OG images |
 
 ## Known limitations
 

@@ -116,6 +116,27 @@ export default function StyleGuide() {
             action per view.
           </p>
         </Panel>
+        <h3 className="display-tight mt-12 text-h4">Surfaces & depth</h3>
+        <p className="mt-2 max-w-[70ch] text-small">
+          Dark sections are lit, not flat: an abyss base with a teal glow from the top right and a faint orange glow from
+          the bottom left, a 64px grid that fades out, and translucent “glass” panels. Light sections use white cards with
+          teal-tinted shadows that lift on hover.
+        </p>
+        <ul className="mt-4 grid gap-4 md:grid-cols-4">
+          <li className="on-dark surface-abyss relative h-40 overflow-hidden rounded-lg p-4 text-caption font-semibold text-white">
+            <div aria-hidden="true" className="grid-lines absolute inset-0" />
+            <span className="relative">surface-abyss + grid-lines</span>
+          </li>
+          <li className="on-dark surface-deep relative h-40 overflow-hidden rounded-lg p-4 text-caption font-semibold text-white">
+            <span className="relative">surface-deep</span>
+          </li>
+          <li className="on-dark surface-abyss relative grid h-40 place-items-center overflow-hidden rounded-lg p-4">
+            <span className="glass rounded-md px-4 py-3 text-caption font-semibold text-white">glass panel</span>
+          </li>
+          <li className="relative grid h-40 place-items-center overflow-hidden rounded-lg bg-mist-50 p-4">
+            <span className="rounded-lg border border-line bg-white px-5 py-4 text-caption font-semibold text-ink shadow-lift">shadow-lift card</span>
+          </li>
+        </ul>
       </DocSection>
 
       {/* ── Contrast ── */}

@@ -3,15 +3,18 @@ import { copy, contact } from "@/content/site";
 import { notes } from "@/content/notes";
 import { anchors, live, type Locale } from "@/lib/i18n";
 import { Note } from "@/components/notes/Note";
+import { Eyebrow } from "@/components/ui/Section";
 import { ContactForm } from "./ContactForm";
 
 export function Contact({ locale }: { locale: Locale }) {
   const t = copy[locale].contactSection;
   return (
-    <section id={anchors[locale].contact} aria-labelledby="contact-title" className="on-dark relative bg-teal-deep py-section text-mist">
+    <section id={anchors[locale].contact} aria-labelledby="contact-title" className="on-dark surface-abyss relative isolate overflow-hidden py-section text-mist">
+      <div aria-hidden="true" className="grid-lines absolute inset-0 -z-10" />
       <div className="container-page grid gap-12 lg:grid-cols-12 lg:gap-8">
-        <div className="lg:col-span-5">
-          <h2 id="contact-title" className="display text-h2 text-white">
+        <div className="reveal lg:col-span-5">
+          <Eyebrow tone="dark">{locale === "cs" ? "Kontakt" : "Contact"}</Eyebrow>
+          <h2 id="contact-title" className="display mt-5 text-h2 text-white">
             {t.titleA}
             <span className="em-teal">{t.titleEm}</span>
             {t.titleB}
@@ -47,9 +50,10 @@ export function Contact({ locale }: { locale: Locale }) {
             </li>
           </ul>
         </div>
-        <div className="relative lg:col-span-7">
-          <Note n={9} text={notes.form[locale]} className="-top-4 right-4" align="end" />
-          <div className="on-light rounded-xl bg-white p-6 text-graphite shadow-pop sm:p-10">
+        <div className="reveal relative lg:col-span-7">
+          <Note n={11} text={notes.form[locale]} className="-top-4 right-4" align="end" />
+          <div aria-hidden="true" className="absolute -inset-6 -z-10 rounded-[3rem] bg-[radial-gradient(closest-side,rgb(25_146_155/0.35),transparent)] blur-2xl" />
+          <div className="on-light rounded-xl bg-white p-6 text-graphite shadow-glow sm:p-10">
             <ContactForm t={copy[locale].form} privacyHref={live("/ochrana-osobnich-udaju/")} />
           </div>
         </div>

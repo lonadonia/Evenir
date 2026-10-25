@@ -50,7 +50,16 @@ export type NavData = {
 
 type MenuKey = "ai" | "services" | null;
 
-export function SiteNav({ data, logo }: { data: NavData; logo: React.ReactNode }) {
+export function SiteNav({
+  data,
+  logoLabel,
+  overlay = false,
+}: {
+  data: NavData;
+  logoLabel: string;
+  /** Transparent header over a dark hero until the page scrolls or a menu opens. */
+  overlay?: boolean;
+}) {
   const [open, setOpen] = useState<MenuKey>(null);
   const [drawer, setDrawer] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -95,20 +104,44 @@ export function SiteNav({ data, logo }: { data: NavData; logo: React.ReactNode }
   const closeAll = useCallback(() => setOpen(null), []);
 
   const L = data.labels;
+  const clear = overlay && !scrolled && !open;
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b bg-white/92 backdrop-blur-md transition-[border-color,box-shadow] duration-200 supports-[backdrop-filter]:bg-white/85 ${
-        scrolled || open ? "border-line shadow-[0_6px_24px_-18px_rgb(6_46_49/0.35)]" : "border-transparent"
+      data-clear={clear || undefined}
+      className={`group/hdr sticky top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-300 ${
+        clear
+          ? "border-white/10 bg-transparent"
+          : `bg-white/92 backdrop-blur-md supports-[backdrop-filter]:bg-white/85 ${
+              scrolled || open ? "border-line shadow-[0_6px_24px_-18px_rgb(6_46_49/0.35)]" : "border-transparent"
+            }`
       }`}
     >
       <div ref={navRef} onBlur={onBlurNav} className="container-page flex h-16 items-center gap-6 lg:h-[4.75rem]">
-        {logo}
+        <Link href={data.homeHref} className="relative inline-flex shrink-0 items-center rounded-sm" aria-label={logoLabel}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- original logo asset, unchanged */}
+          <img
+            src="/brand/evenir-logo.svg"
+            alt=""
+            width={153}
+            height={28}
+            className={`h-[1.6rem] w-auto transition-opacity duration-300 lg:h-[1.85rem] ${clear ? "opacity-0" : "opacity-100"}`}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element -- original white logo asset, unchanged */}
+          <img
+            src="/brand/evenir-logo-white.svg"
+            alt=""
+            width={154}
+            height={28}
+            className={`absolute inset-y-0 left-0 my-auto h-[1.6rem] w-auto transition-opacity duration-300 lg:h-[1.85rem] ${clear ? "opacity-100" : "opacity-0"}`}
+          />
+        </Link>
 
         <nav aria-label={L.mainNav} className="ms-auto hidden lg:block">
           <ul className="flex items-center gap-1 xl:gap-2">
             <li>
               <MenuTrigger
+                clear={clear}
                 label={L.ai}
                 expanded={open === "ai"}
                 controls={aiId}
@@ -120,6 +153,7 @@ export function SiteNav({ data, logo }: { data: NavData; logo: React.ReactNode }
             </li>
             <li>
               <MenuTrigger
+                clear={clear}
                 label={L.services}
                 expanded={open === "services"}
                 controls={svcId}
@@ -130,27 +164,27 @@ export function SiteNav({ data, logo }: { data: NavData; logo: React.ReactNode }
               />
             </li>
             <li>
-              <TopLink href={data.casesHref} onClick={closeAll}>
+              <TopLink clear={clear} href={data.casesHref} onClick={closeAll}>
                 {L.cases}
               </TopLink>
             </li>
             <li>
-              <TopLink href={data.aboutHref} onClick={closeAll}>
+              <TopLink clear={clear} href={data.aboutHref} onClick={closeAll}>
                 {L.about}
               </TopLink>
             </li>
             <li className="hidden xl:block">
-              <TopLink href={data.careersHref} external>
+              <TopLink clear={clear} href={data.careersHref} external>
                 {L.careers}
               </TopLink>
             </li>
           </ul>
         </nav>
 
-        <div className="ms-auto flex items-center gap-3 lg:ms-0">
-          <LangSwitch langs={data.langs} label={L.language} className="hidden lg:flex" />
+        <div className={`ms-auto flex items-center gap-3 lg:ms-0 ${clear ? "on-dark" : ""}`}>
+          <LangSwitch langs={data.langs} label={L.language} className="hidden lg:flex" tone={clear ? "clear" : "light"} />
           <span className="hidden lg:block">
-            <Link href={data.contactHref} onClick={closeAll} className={buttonClass("secondary", "sm")}>
+            <Link href={data.contactHref} onClick={closeAll} className={buttonClass(clear ? "primary" : "secondary", "sm")}>
               {L.contactCta}
             </Link>
           </span>
@@ -159,7 +193,9 @@ export function SiteNav({ data, logo }: { data: NavData; logo: React.ReactNode }
             onClick={() => setDrawer(true)}
             aria-haspopup="dialog"
             aria-expanded={drawer}
-            className="-me-2 inline-flex h-11 items-center gap-2 rounded-md px-3 font-semibold text-ink hover:bg-mist-100 lg:hidden"
+            className={`-me-2 inline-flex h-11 items-center gap-2 rounded-md px-3 font-semibold lg:hidden ${
+              clear ? "text-white hover:bg-white/10" : "text-ink hover:bg-mist-100"
+            }`}
           >
             <span className="text-small">{L.menu}</span>
             <Menu aria-hidden="true" className="size-5" strokeWidth={2} />
@@ -300,12 +336,14 @@ function MenuTrigger({
   controls,
   onClick,
   refCb,
+  clear,
 }: {
   label: string;
   expanded: boolean;
   controls: string;
   onClick: () => void;
   refCb: (el: HTMLButtonElement | null) => void;
+  clear?: boolean;
 }) {
   return (
     <button
@@ -315,14 +353,14 @@ function MenuTrigger({
       aria-controls={controls}
       onClick={onClick}
       className={`inline-flex h-11 items-center gap-1.5 rounded-md px-3 text-[0.96875rem] font-semibold transition-colors ${
-        expanded ? "bg-mist-100 text-ink" : "text-ink hover:bg-mist-50"
+        expanded ? "bg-mist-100 text-ink" : clear ? "text-white hover:bg-white/10" : "text-ink hover:bg-mist-50"
       }`}
     >
       {label}
       <ChevronDown
         aria-hidden="true"
         strokeWidth={2.25}
-        className={`size-4 text-teal-ink transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+        className={`size-4 transition-transform duration-200 ${clear ? "text-teal-glow" : "text-teal-ink"} ${expanded ? "rotate-180" : ""}`}
       />
     </button>
   );
@@ -333,14 +371,17 @@ function TopLink({
   children,
   onClick,
   external,
+  clear,
 }: {
   href: string;
   children: React.ReactNode;
   onClick?: () => void;
   external?: boolean;
+  clear?: boolean;
 }) {
-  const cls =
-    "inline-flex h-11 items-center rounded-md px-3 text-[0.96875rem] font-semibold text-ink transition-colors hover:bg-mist-50";
+  const cls = `inline-flex h-11 items-center rounded-md px-3 text-[0.96875rem] font-semibold transition-colors ${
+    clear ? "text-white hover:bg-white/10" : "text-ink hover:bg-mist-50"
+  }`;
   return external ? (
     <a href={href} className={cls} target="_blank" rel="noopener">
       {children}
@@ -361,7 +402,7 @@ function LangSwitch({
   langs: NavData["langs"];
   label: string;
   className?: string;
-  tone?: "light" | "drawer";
+  tone?: "light" | "drawer" | "clear";
 }) {
   return (
     <ul aria-label={label} className={`items-center gap-0.5 ${className}`}>
@@ -370,7 +411,9 @@ function LangSwitch({
           {l.current ? (
             <span
               aria-current="true"
-              className="grid h-9 min-w-9 place-items-center rounded-sm bg-mist-100 px-2 text-caption font-bold text-ink"
+              className={`grid h-9 min-w-9 place-items-center rounded-sm px-2 text-caption font-bold ${
+                tone === "clear" ? "bg-white/12 text-white" : "bg-mist-100 text-ink"
+              }`}
             >
               <abbr title={l.label} className="no-underline">
                 {l.code}
@@ -382,8 +425,12 @@ function LangSwitch({
               hrefLang={l.code.toLowerCase()}
               lang={l.code.toLowerCase()}
               {...(l.external ? { target: "_blank", rel: "noopener" } : {})}
-              className={`grid h-9 min-w-9 place-items-center rounded-sm px-2 text-caption font-semibold hover:bg-mist-50 ${
-                tone === "drawer" ? "text-ink" : "text-graphite hover:text-ink"
+              className={`grid h-9 min-w-9 place-items-center rounded-sm px-2 text-caption font-semibold ${
+                tone === "clear"
+                  ? "text-mist hover:bg-white/10 hover:text-white"
+                  : tone === "drawer"
+                    ? "text-ink hover:bg-mist-50"
+                    : "text-graphite hover:bg-mist-50 hover:text-ink"
               }`}
             >
               <abbr title={l.label} className="no-underline">

@@ -28,6 +28,14 @@ export const notes = {
     cs: "Detailní stránky produktů nejsou v rozsahu redesignu. Odkazy vedou na stávající stránky evenir.cz (otevřená otázka č. 2).",
     en: "Product detail pages are not in the redesign scope. Links go to the existing evenir.cz pages (open decision #2).",
   },
+  why: {
+    cs: "NÁVRH OBSAHU: čtyři důvody vycházejí z existujících služeb Evenir (bezpečnost, Microsoft 365, cloud, infrastruktura, sídlo v Praze). Formulace potvrdí klient.",
+    en: "DRAFT CONTENT: the four reasons are derived from Evenir's existing services (security, Microsoft 365, cloud, infrastructure, Prague office). The client confirms the wording.",
+  },
+  process: {
+    cs: "NÁVRH OBSAHU: doporučený postup spolupráce. Kroky a jejich popis upravíme podle skutečného procesu Evenir.",
+    en: "DRAFT CONTENT: a recommended engagement process. Steps and descriptions will be adjusted to Evenir's actual process.",
+  },
   foundations: {
     cs: "Ne-AI služby zůstávají viditelné — AI je vstupní branou, ne náhradou. Která oblast zůstane v navigaci, potvrdí klient (otevřená otázka č. 5).",
     en: "Non-AI services stay visible — AI is the front door, not a replacement. The client confirms which areas stay in navigation (open decision #5).",

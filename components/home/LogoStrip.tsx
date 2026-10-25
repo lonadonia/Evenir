@@ -21,42 +21,52 @@ const LOGOS = [
 ];
 
 /** Optical sizing: equal visual area per logo, capped height/width. */
-const AREA = 2900;
+const AREA = 2600;
 const size = (r: number) => {
-  let h = Math.min(46, Math.sqrt(AREA / r));
-  if (h * r > 132) h = 132 / r;
+  let h = Math.min(44, Math.sqrt(AREA / r));
+  if (h * r > 128) h = 128 / r;
   return { h: Math.round(h), w: Math.round(h * r) };
 };
 
-export function LogoStrip({ locale }: { locale: Locale }) {
+/**
+ * Client logos as a slow, endless band at the foot of the dark hero.
+ * Rendered twice for a seamless loop; the copy is hidden from assistive tech.
+ * Pauses on hover; static (wrapping) when reduced motion is requested.
+ */
+export function LogoMarquee({ locale }: { locale: Locale }) {
+  const list = (hidden: boolean) => (
+    <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center gap-14 pe-14 sm:gap-20 sm:pe-20">
+      {LOGOS.map((l) => {
+        const { h, w } = size(l.r);
+        return (
+          <li key={l.file} className="flex h-12 items-center">
+            <img
+              src={`/clients/${l.file}.svg`}
+              alt={hidden ? "" : l.name}
+              width={w}
+              height={h}
+              loading="lazy"
+              className="h-auto opacity-60 brightness-0 invert transition-opacity hover:opacity-100"
+              style={{ width: w }}
+            />
+          </li>
+        );
+      })}
+    </ul>
+  );
+
   return (
-    <section aria-labelledby="logos-title" className="relative border-y border-line bg-white">
-      <div className="container-page relative py-9 lg:py-10">
+    <div className="relative border-t border-white/10 bg-abyss/40">
+      <div className="container-page relative flex flex-col gap-5 py-8 lg:flex-row lg:items-center lg:gap-10">
         <Note n={3} text={notes.logos[locale]} className="-top-4 right-4" align="end" />
-        <div className="grid items-center gap-y-6 lg:grid-cols-12 lg:gap-x-8">
-          <h2 id="logos-title" className="text-small font-semibold text-graphite lg:col-span-2">
-            {copy[locale].logos.title}
-          </h2>
-          <ul className="grid grid-cols-3 items-center gap-x-6 gap-y-7 sm:grid-cols-4 lg:col-span-10 lg:grid-cols-6 lg:gap-x-10">
-            {LOGOS.map((l) => {
-              const { h, w } = size(l.r);
-              return (
-                <li key={l.file} className="flex h-12 items-center justify-center lg:justify-start">
-                  <img
-                    src={`/clients/${l.file}.svg`}
-                    alt={l.name}
-                    width={w}
-                    height={h}
-                    loading="lazy"
-                    className="h-auto max-w-full scale-90 opacity-80 grayscale sm:scale-100"
-                    style={{ width: w }}
-                  />
-                </li>
-              );
-            })}
-          </ul>
+        <h2 className="shrink-0 text-small font-semibold text-mist/80 lg:max-w-[12rem]">{copy[locale].logos.title}</h2>
+        <div className="marquee relative min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+          <div className="marquee-track flex w-max motion-reduce:w-auto motion-reduce:flex-wrap">
+            {list(false)}
+            <div className="motion-reduce:hidden">{list(true)}</div>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

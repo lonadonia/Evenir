@@ -200,13 +200,15 @@ export function ServiceRow({ item, t }: { item: CatalogueItem; t: Pick<Catalogue
     <article
       id={item.id}
       className={`group relative scroll-mt-32 grid grid-cols-[2.75rem_1fr] gap-x-4 gap-y-2 border-b border-line py-6 transition-colors target:bg-orange-tint hover:bg-mist-50 sm:grid-cols-[3rem_minmax(0,5fr)_minmax(0,6fr)] sm:gap-x-6 sm:px-3 lg:grid-cols-[3rem_minmax(0,4fr)_minmax(0,6fr)_auto] ${
-        item.featured ? "bg-mist-50/70" : ""
+        item.featured ? "bg-gradient-to-r from-orange-tint/70 via-mist-50 to-transparent" : ""
       }`}
     >
       {item.featured && <span aria-hidden="true" className="absolute inset-y-0 start-0 w-1 rounded-full bg-orange" />}
       <span
         className={`row-span-2 grid size-11 place-items-center rounded-md sm:row-span-1 sm:size-12 ${
-          item.featured ? "bg-teal-deep text-orange" : "bg-mist-100 text-teal-ink group-hover:bg-mist"
+          item.featured
+            ? "bg-gradient-to-br from-orange to-[#ff9f6e] text-ink shadow-[0_8px_24px_-10px_rgb(255_130_67/0.8)]"
+            : "bg-mist-100 text-teal-ink transition-colors group-hover:bg-gradient-to-br group-hover:from-teal group-hover:to-teal-deep group-hover:text-white"
         }`}
       >
         <ServiceGlyph icon={item.icon} className="size-5" />

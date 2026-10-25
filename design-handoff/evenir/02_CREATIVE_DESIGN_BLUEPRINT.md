@@ -38,6 +38,20 @@ Supporting device kept from the current site: **the two-tone headline** — an i
 - **Shape:** radii 6/10/14/20/32 with nested-radius rule; teal-tinted shadows.
 - **Icons:** Lucide, stroke 1.75, in mist tiles (light) or translucent tiles with orange glyphs (dark).
 
+## v2 · Visual upgrade (after client feedback “too plain”)
+
+The first draft read as a clean wireframe: mostly white, a pale hero, grey logos, line-art cards and hatched placeholders. v2 keeps the same structure, content rules and signature, but raises the visual temperature:
+
+- **Lit dark surfaces.** Hero, “Proč Evenir”, contact and footer sit on an *abyss* base (`#031D1F`) lit by a teal glow (top right) and a faint orange glow (bottom left), with a fading 64px grid. Light sections alternate in between, so the page has a dark–light rhythm.
+- **Overlay header.** Transparent with the original white logo over dark heroes; turns white with the colour logo after 8px of scroll or when a menu opens.
+- **Glowing signature.** The signal schematic gets a dark tone: glass chips, glowing connectors, a gradient AI core, orange pulses with halos, inside a “console” window with a *Zabezpečeno* status. Two floating badges carry the trust message.
+- **Bento portfolio.** Custom AI is a large dark tile (first in order), with your systems as modules around a tailored core; the three products are white tiles with illustrative mini-interfaces (enquiry card + chart, live call with waveform, property card). A consultation tile closes the grid.
+- **New sections (draft content):** *Proč Evenir* (four trust reasons drawn from existing services) and *Jak spolupracujeme* (four steps on one connector line with a travelling orange pulse).
+- **Designed covers** replace hatched boxes on story cards and the case-study hero; they are labelled *Ukázkový obsah* and *Ilustrace · foto dodá klient*.
+- **Depth & motion:** teal-tinted lift shadows, pointer-follow highlight on tiles, a slow client-logo marquee, hero entrance animation. Everything stops under `prefers-reduced-motion`. No scroll-triggered reveals — content is never hidden, which keeps screenshots and HTML-to-Figma import reliable.
+
+Homepage order in v2: hero (+ logo marquee) → AI portfolio → Proč Evenir → Jak spolupracujeme → foundations → case studies → about → contact.
+
 ## Page blueprints
 
 ### Homepage (recommended order — a design recommendation, not client-prescribed)

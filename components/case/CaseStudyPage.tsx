@@ -11,6 +11,7 @@ import { ServiceGlyph } from "@/components/ui/icons";
 import { Note } from "@/components/notes/Note";
 import { ProductVisual } from "@/components/home/ProductVisual";
 import { StoryCard } from "@/components/home/CaseStudies";
+import { CaseCover } from "./CaseCover";
 
 /**
  * Reusable case-study template. Every block below is a slot; optional slots
@@ -34,89 +35,93 @@ export function CaseStudyPage({ locale, story }: { locale: Locale; story: CaseSt
   const others = caseStudies.filter((c) => c.id !== story.id);
 
   return (
-    <SiteShell locale={locale} alternateHref={alternatePath(locale, { caseStudy: story.slug[locale === "cs" ? "en" : "cs"] })}>
-      {/* Review bar — part of the prototype, not of the final page */}
-      <div className="border-b border-dashed border-orange/60 bg-orange-tint">
-        <div className="container-page flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative text-caption font-semibold text-ink">
-            <Note n={1} text={notes.caseTemplate[locale]} className="-top-1.5 -left-10 hidden sm:block" />
-            {t.templateBar}
+    <SiteShell locale={locale} alternateHref={alternatePath(locale, { caseStudy: story.slug[locale === "cs" ? "en" : "cs"] })} overlay>
+      {/* 1 · Dark hero: review bar, title + summary + meta, cover */}
+      <header className="on-dark surface-abyss relative isolate -mt-16 text-mist lg:-mt-[4.75rem]">
+        <div aria-hidden="true" className="grid-lines absolute inset-0 -z-10" />
+        <div className={`container-page pt-24 lg:pt-28 ${story.media?.length ? "pb-0" : "pb-16 lg:pb-20"}`}>
+          {/* Review bar — part of the prototype, not of the final page */}
+          <div className="glass flex flex-col gap-3 rounded-lg border-dashed border-orange/50! px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative text-caption font-semibold text-white">
+              <Note n={1} text={notes.caseTemplate[locale]} className="-top-1.5 -left-12 hidden sm:block" />
+              {t.templateBar}
+            </div>
+            <nav aria-label={t.switchLabel}>
+              <ul className="flex flex-wrap gap-1.5">
+                {caseStudies.map((c) => {
+                  const current = c.id === story.id;
+                  return (
+                    <li key={c.id}>
+                      <Link
+                        href={r.caseStudy(c.slug[locale])}
+                        aria-current={current ? "page" : undefined}
+                        className={`inline-flex min-h-9 items-center rounded-full px-3 text-caption font-semibold transition-colors ${
+                          current ? "bg-orange text-ink" : "bg-white/8 text-white ring-1 ring-white/15 hover:bg-white/15"
+                        }`}
+                      >
+                        {c.variant[locale]}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
           </div>
-          <nav aria-label={t.switchLabel}>
-            <ul className="flex flex-wrap gap-1.5">
-              {caseStudies.map((c) => {
-                const current = c.id === story.id;
-                return (
-                  <li key={c.id}>
-                    <Link
-                      href={r.caseStudy(c.slug[locale])}
-                      aria-current={current ? "page" : undefined}
-                      className={`inline-flex min-h-9 items-center rounded-full px-3 text-caption font-semibold transition-colors ${
-                        current ? "bg-ink text-white" : "bg-white text-ink ring-1 ring-line hover:ring-line-strong"
-                      }`}
-                    >
-                      {c.variant[locale]}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+
+          <nav aria-label="Breadcrumb" className="mt-10">
+            <ol className="flex flex-wrap items-center gap-2 text-caption text-mist/75">
+              <li>
+                <Link href={r.home} className="link">
+                  {t.breadcrumbHome}
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li>
+                <Link href={r.cases} className="link">
+                  {t.breadcrumbCases}
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li aria-current="page" className="font-semibold text-white">
+                {story.title[locale]}
+              </li>
+            </ol>
           </nav>
-        </div>
-      </div>
 
-      {/* 1 · Title + summary + meta */}
-      <header className="container-page pt-8 lg:pt-10">
-        <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-2 text-caption text-graphite">
-            <li>
-              <Link href={r.home} className="link">
-                {t.breadcrumbHome}
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <Link href={r.cases} className="link">
-                {t.breadcrumbCases}
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li aria-current="page" className="font-semibold text-ink">
-              {story.title[locale]}
-            </li>
-          </ol>
-        </nav>
-
-        <div className="mt-10 grid gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-7">
-            <p className="inline-flex items-center gap-2 text-small font-semibold text-teal-ink">
-              <ServiceGlyph icon={service.icon} className="size-4" />
-              {story.product[locale]}
-              <span className="label rounded-full bg-orange-tint px-2.5 py-0.5 text-ink">{copy[locale].cases.sample}</span>
-            </p>
-            <h1 className="display mt-5 text-h1">{story.title[locale]}</h1>
-            <p className="mt-6 max-w-[56ch] text-lead">{story.summary[locale]}</p>
+          <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-12 lg:gap-8">
+            <div className="enter enter-2 lg:col-span-7">
+              <p className="inline-flex flex-wrap items-center gap-2 text-small font-semibold text-teal-glow">
+                <ServiceGlyph icon={service.icon} className="size-4" />
+                {story.product[locale]}
+                <span className="label rounded-full bg-white px-2.5 py-0.5 text-ink">{copy[locale].cases.sample}</span>
+              </p>
+              <h1 className="display mt-5 text-[clamp(2.375rem,1.3rem+4vw,4.5rem)] leading-[1.02] text-white">{story.title[locale]}</h1>
+              <p className="mt-6 max-w-[56ch] text-lead text-mist/90">{story.summary[locale]}</p>
+            </div>
+            <dl className="enter enter-3 grid grid-cols-2 content-start gap-px self-end overflow-hidden rounded-lg border border-white/12 bg-white/10 text-small lg:col-span-5 lg:col-start-8">
+              <Meta label={t.client} value={t.clientSlot} slot />
+              <Meta label={t.industry} value={t.industrySlot} slot />
+              <Meta
+                label={t.solution}
+                value={
+                  <a href={service.href} target="_blank" rel="noopener" className="link font-semibold">
+                    {service.name[locale]}
+                    <span className="sr-only"> ({ext})</span>
+                  </a>
+                }
+              />
+              <Meta label={t.duration} value={t.durationSlot} slot />
+            </dl>
           </div>
-          <dl className="grid grid-cols-2 content-start gap-px self-end overflow-hidden rounded-lg border border-line bg-line text-small lg:col-span-5 lg:col-start-8">
-            <Meta label={t.client} value={t.clientSlot} slot />
-            <Meta label={t.industry} value={t.industrySlot} slot />
-            <Meta
-              label={t.solution}
-              value={
-                <a href={service.href} target="_blank" rel="noopener" className="link font-semibold">
-                  {service.name[locale]}
-                  <span className="sr-only"> ({ext})</span>
-                </a>
-              }
-            />
-            <Meta label={t.duration} value={t.durationSlot} slot />
-          </dl>
-        </div>
 
-        {story.media?.length ? (
-          <ImageSlot label={t.heroImage} note={t.imageNote} className="mt-12 aspect-[16/9] sm:aspect-[21/9] lg:mt-16" large />
-        ) : null}
+          {story.media?.length ? (
+            <div className="enter enter-4 relative z-10 mt-12 -mb-16 lg:mt-16 lg:-mb-24">
+              <CaseCover story={story} locale={locale} size="lg" className="aspect-[16/9] rounded-xl shadow-glow ring-1 ring-white/10 sm:aspect-[21/9]" />
+            </div>
+          ) : null}
+        </div>
       </header>
+      {story.media?.length ? <div aria-hidden="true" className="h-16 lg:h-24" /> : null}
 
       {/* Body */}
       <div className="container-page grid gap-12 py-section lg:grid-cols-12 lg:gap-8">
@@ -170,7 +175,7 @@ export function CaseStudyPage({ locale, story }: { locale: Locale; story: CaseSt
                       {i < story.solution.steps.length - 1 && (
                         <span aria-hidden="true" className="absolute top-10 bottom-0 left-5 w-px bg-line" />
                       )}
-                      <span className="relative grid size-10 place-items-center rounded-full border-[1.5px] border-teal bg-white text-small font-bold text-teal-ink tabular">
+                      <span className="relative grid size-10 place-items-center rounded-full bg-gradient-to-br from-teal to-teal-deep text-small font-bold text-white shadow-[0_8px_20px_-8px_rgb(25_146_155/0.9)] tabular">
                         {i + 1}
                       </span>
                       <div className="pt-1.5">
@@ -181,8 +186,9 @@ export function CaseStudyPage({ locale, story }: { locale: Locale; story: CaseSt
                   ))}
                 </ol>
               )}
-              <div className="self-start rounded-lg bg-mist-50 p-6">
-                <ProductVisual kind={story.serviceId} className="mx-auto max-w-[16rem]" />
+              <div className="on-dark surface-deep relative self-start overflow-hidden rounded-lg p-6 shadow-lift">
+                <div aria-hidden="true" className="grid-lines absolute inset-0 opacity-70" />
+                <ProductVisual kind={story.serviceId} tone="dark" className="relative mx-auto max-w-[16rem]" />
               </div>
             </div>
           </Block>
@@ -192,7 +198,8 @@ export function CaseStudyPage({ locale, story }: { locale: Locale; story: CaseSt
             {story.outcomes.metrics?.length ? (
               <ul className={`mt-8 grid gap-4 ${story.outcomes.metrics.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
                 {story.outcomes.metrics.map((m) => (
-                  <li key={m.label.cs} className="rounded-lg border border-dashed border-line-strong bg-white p-6">
+                  <li key={m.label.cs} className="card-sheen relative overflow-hidden rounded-lg border border-dashed border-line-strong p-6 shadow-card">
+                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal via-teal-glow to-orange" />
                     <p className="display text-[clamp(2.5rem,2rem+2vw,3.5rem)] leading-none text-teal tabular" aria-hidden="true">
                       {t.metricValue}
                     </p>
@@ -219,17 +226,18 @@ export function CaseStudyPage({ locale, story }: { locale: Locale; story: CaseSt
           ) : null}
 
           {story.testimonial && (
-            <figure className="relative rounded-xl bg-mist-50 p-8 sm:p-12">
-              <span className="slot-label absolute -top-3 left-8 rounded-full bg-orange px-2.5 py-0.5 text-caption font-bold text-ink">
+            <figure className="on-dark surface-deep relative overflow-hidden rounded-xl p-8 text-mist shadow-lift sm:p-12">
+              <div aria-hidden="true" className="grid-lines absolute inset-0 opacity-60" />
+              <span className="slot-label absolute top-4 right-4 rounded-full bg-orange px-2.5 py-0.5 text-caption font-bold text-ink">
                 {locale === "cs" ? "Slot · volitelný" : "Slot · optional"}
               </span>
-              <Quote aria-hidden="true" className="size-10 text-teal" strokeWidth={1.5} />
-              <blockquote className="display-tight mt-5 text-h3 text-ink">
+              <Quote aria-hidden="true" className="relative size-12 text-orange" strokeWidth={1.5} />
+              <blockquote className="display-tight relative mt-5 text-h3 text-white">
                 <p>{t.testimonial}</p>
               </blockquote>
-              <figcaption className="mt-6 flex items-center gap-4 text-small">
-                <span className="placeholder-hatch size-12 rounded-full border border-dashed border-line-strong" aria-hidden="true" />
-                <span className="font-semibold text-graphite">{t.testimonialBy}</span>
+              <figcaption className="relative mt-8 flex items-center gap-4 text-small">
+                <span className="size-12 rounded-full border border-dashed border-white/30 bg-white/5" aria-hidden="true" />
+                <span className="font-semibold text-mist/85">{t.testimonialBy}</span>
               </figcaption>
             </figure>
           )}
@@ -237,7 +245,8 @@ export function CaseStudyPage({ locale, story }: { locale: Locale; story: CaseSt
       </div>
 
       {/* Next step */}
-      <section aria-labelledby="next-title" className="on-dark bg-teal-deep py-section-sm text-mist">
+      <section aria-labelledby="next-title" className="on-dark surface-abyss relative isolate overflow-hidden py-section-sm text-mist">
+        <div aria-hidden="true" className="grid-lines absolute inset-0 -z-10" />
         <div className="container-page grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-8">
           <div className="lg:col-span-6">
             <h2 id="next-title" className="display text-h2 text-white">
@@ -288,9 +297,9 @@ export function CaseStudyPage({ locale, story }: { locale: Locale; story: CaseSt
 
 function Meta({ label, value, slot }: { label: string; value: React.ReactNode; slot?: boolean }) {
   return (
-    <div className="bg-white p-5">
-      <dt className="text-caption font-semibold text-graphite">{label}</dt>
-      <dd className={`mt-1 ${slot ? "text-graphite italic" : "text-ink"}`}>{value}</dd>
+    <div className="bg-abyss/60 p-5 backdrop-blur">
+      <dt className="text-caption font-semibold text-mist/70">{label}</dt>
+      <dd className={`mt-1 ${slot ? "text-mist/85 italic" : "text-white"}`}>{value}</dd>
     </div>
   );
 }
@@ -309,7 +318,7 @@ function Block({ id, title, slot, children }: { id: string; title: string; slot:
 
 function ImageSlot({ label, note, className = "", large = false }: { label: string; note: string; className?: string; large?: boolean }) {
   return (
-    <div className={`placeholder-hatch grid place-items-center rounded-lg border border-dashed border-line-strong ${className}`}>
+    <div className={`relative grid place-items-center overflow-hidden rounded-lg border border-dashed border-line-strong bg-gradient-to-br from-mist-50 to-mist-100 ${className}`}>
       <span className="flex flex-col items-center gap-2 px-6 text-center text-small font-semibold text-teal-ink">
         <ImageIcon aria-hidden="true" className={large ? "size-8" : "size-6"} strokeWidth={1.5} />
         {label}
