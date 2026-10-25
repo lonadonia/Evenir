@@ -9,7 +9,7 @@
 
 ## Vercel
 
-- Team: *hakim's projects*. New project: `evenir-redesign` (`prj_aQzkKIi9njeh43K0pGQOcWWxXjnc`), framework Next.js, Node 22.
+- Team: *hakim's projects*. New project: `evenir-redesign` (`prj_aQzkKIi9njeh43K0pGQOcWWxXjnc`), framework Next.js.
 - Deployment `dpl_6MCivbZvtQ9u3h9aq2xxFq5wtG6S` from commit `28eaf11` — state **READY**:
   - https://evenir-redesign.vercel.app
   - https://evenir-redesign-atc6jlq7m-hakims-projects-8cc34b62.vercel.app (immutable deployment URL)
