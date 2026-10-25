@@ -10,9 +10,10 @@
 ## Vercel
 
 - Team: *hakim's projects*. New project: `evenir-redesign` (`prj_aQzkKIi9njeh43K0pGQOcWWxXjnc`), framework Next.js.
-- Deployment `dpl_6MCivbZvtQ9u3h9aq2xxFq5wtG6S` from commit `28eaf11` — state **READY**:
-  - https://evenir-redesign.vercel.app
-  - https://evenir-redesign-atc6jlq7m-hakims-projects-8cc34b62.vercel.app (immutable deployment URL)
+- **v2 (current design)** — preview deployment `dpl_6a5nTo7YHRvGbqB7vS7TCW4gPkGP` from commit `1973207`:
+  - https://evenir-redesign-e4sox9wer-hakims-projects-8cc34b62.vercel.app (immutable deployment URL)
+  - https://evenir-redesign-git-claude-even-92b2d5-hakims-projects-8cc34b62.vercel.app (branch alias — always the latest push of this branch)
+- v1 (first draft) — deployment `dpl_6MCivbZvtQ9u3h9aq2xxFq5wtG6S` from commit `28eaf11`, still served at https://evenir-redesign.vercel.app. Promoting v2 to that short URL is a production action and was not done without approval.
 - Verified through Vercel's authenticated fetch: `/`, `/sluzby`, `/pripadove-studie/ukazka-interni-dokumenty` and `/board` return HTTP 200 with the expected titles and headings, and `noindex`.
 - **Target note:** the request did not specify a target, but Vercel labelled the deployment *production* because the new project took the repository's only branch as its production branch. This is a new, isolated project: no custom domain, no DNS change, and no existing project was touched. All pages send `noindex`. If you prefer, rename the production branch in Vercel → Project → Settings → Git (e.g. to `main`) so feature branches deploy as previews, or delete the project.
 - The project was created by a one-off deployment and is **not** connected to the repository for automatic deploys. To deploy future pushes automatically, connect `lonadonia/Evenir` in the project's Git settings.
